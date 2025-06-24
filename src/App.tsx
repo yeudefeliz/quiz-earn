@@ -1,18 +1,16 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
+
+declare global {
+  interface Window {
+    adsbygoogle: any;
+  }
+}
 
 const questions = [
-  {
-    question: "What is 2 + 2?",
-    answer: "4"
-  },
-  {
-    question: "What is the capital of France?",
-    answer: "Paris"
-  },
-  {
-    question: "Which planet is known as the Red Planet?",
-    answer: "Mars"
-  }
+  { question: "What is 2 + 2?", answer: "4" },
+  { question: "What is the capital of France?", answer: "Paris" },
+  { question: "Which planet is known as the Red Planet?", answer: "Mars" }
 ];
 
 function App() {
@@ -21,11 +19,15 @@ function App() {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
+  useEffect(() => {
+    if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
+      window.adsbygoogle.push({});
+    }
+  }, [current]); // Reload ad when question changes
+
   const checkAnswer = () => {
     const correct = userAnswer.trim().toLowerCase() === questions[current].answer.toLowerCase();
-    if (correct) {
-      setScore(prev => prev + 1);
-    }
+    if (correct) setScore(prev => prev + 1);
 
     if (current + 1 < questions.length) {
       setCurrent(prev => prev + 1);
@@ -36,21 +38,17 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+    <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
       <h1>🧠 Quiz App</h1>
 
-      {/* Google AdSense Block */}
-      <div style={{ margin: '1rem 0' }}>
-        <ins className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-client="ca-pub-1602412867887085"
-          data-ad-slot="1234567890"
-          data-ad-format="auto"
-          data-full-width-responsive="true"></ins>
-        <script>
-          {(window.adsbygoogle = window.adsbygoogle || []).push({})}
-        </script>
-      </div>
+      {/* Google Ad Block */}
+      <ins className="adsbygoogle"
+        style={{ display: 'block', marginBottom: '1rem' }}
+        data-ad-client="ca-pub-1602412867887085"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>
 
       {!showResult ? (
         <>
